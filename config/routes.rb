@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :wallets
+  resources :wallets, only: [:index, :show]
   resources :stocks
   resources :teams
   resources :users

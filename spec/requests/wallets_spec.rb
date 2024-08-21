@@ -13,26 +13,6 @@ require 'rails_helper'
 # sticking to rails and rspec-rails APIs to keep things simple and stable.
 
 RSpec.describe "/wallets", type: :request do
-  # This should return the minimal set of attributes required to create a valid
-  # Wallet. As you add validations to Wallet, be sure to
-  # adjust the attributes here as well.
-  let(:valid_attributes) {
-    account = FactoryBot.create(:user) 
-    {
-      balance: 100,
-      account_id: account.id,
-      account_type: account.class.name
-    }
-  }
-
-  let(:invalid_attributes) {
-    {
-      balance: nil,
-      account_id: nil,
-      account_type: nil
-    }
-  }
-
   # This should return the minimal set of values that should be in the headers
   # in order to pass any filters (e.g. authentication) defined in
   # WalletsController, or in your router and rack
@@ -43,7 +23,7 @@ RSpec.describe "/wallets", type: :request do
 
   describe "GET /index" do
     it "renders a successful response" do
-      Wallet.create! valid_attributes
+      FactoryBot.create(:user) 
       get wallets_url, headers: valid_headers, as: :json
       expect(response).to be_successful
     end
@@ -51,88 +31,9 @@ RSpec.describe "/wallets", type: :request do
 
   describe "GET /show" do
     it "renders a successful response" do
-      wallet = Wallet.create! valid_attributes
-      get wallet_url(wallet), as: :json
+      account = FactoryBot.create(:user) 
+      get wallet_url(account.wallet), as: :json
       expect(response).to be_successful
-    end
-  end
-
-  describe "POST /create" do
-    context "with valid parameters" do
-      it "creates a new Wallet" do
-        expect {
-          post wallets_url,
-               params: { wallet: valid_attributes }, headers: valid_headers, as: :json
-        }.to change(Wallet, :count).by(1)
-      end
-
-      it "renders a JSON response with the new wallet" do
-        post wallets_url,
-             params: { wallet: valid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:created)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "does not create a new Wallet" do
-        expect {
-          post wallets_url,
-               params: { wallet: invalid_attributes }, as: :json
-        }.to change(Wallet, :count).by(0)
-      end
-
-      it "renders a JSON response with errors for the new wallet" do
-        post wallets_url,
-             params: { wallet: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(422)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-  end
-
-  describe "PATCH /update" do
-    context "with valid parameters" do
-      let(:new_attributes) {
-        {
-          balance: 200
-        }
-      }
-
-      it "updates the requested wallet" do
-        wallet = Wallet.create! valid_attributes
-        patch wallet_url(wallet),
-              params: { wallet: new_attributes }, headers: valid_headers, as: :json
-        wallet.reload
-        expect(wallet.balance).to eq(200)
-      end
-
-      it "renders a JSON response with the wallet" do
-        wallet = Wallet.create! valid_attributes
-        patch wallet_url(wallet),
-              params: { wallet: new_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(:ok)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-
-    context "with invalid parameters" do
-      it "renders a JSON response with errors for the wallet" do
-        wallet = Wallet.create! valid_attributes
-        patch wallet_url(wallet),
-              params: { wallet: invalid_attributes }, headers: valid_headers, as: :json
-        expect(response).to have_http_status(422)
-        expect(response.content_type).to match(a_string_including("application/json"))
-      end
-    end
-  end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested wallet" do
-      wallet = Wallet.create! valid_attributes
-      expect {
-        delete wallet_url(wallet), headers: valid_headers, as: :json
-      }.to change(Wallet, :count).by(-1)
     end
   end
 end

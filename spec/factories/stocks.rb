@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :stock do
-    symbol { "MyString" }
-    company_name { "MyString" }
+    symbol { "AAPL" }
+    company_name { "Apple Inc." }
   end
 end

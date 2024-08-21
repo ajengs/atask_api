@@ -62,6 +62,12 @@ RSpec.describe "/users", type: :request do
              params: { user: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+        json_response = JSON.parse(response.body)
+        expect(json_response['id']).to be_present
+        expect(json_response['name']).to eq(valid_attributes[:name])
+        expect(json_response['email']).to eq(valid_attributes[:email])
+        expect(json_response['wallet']).to be_present
+        expect(json_response['wallet']['balance']).to eq("0.0")
       end
     end
 

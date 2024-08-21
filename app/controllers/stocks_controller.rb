@@ -5,12 +5,12 @@ class StocksController < ApplicationController
   def index
     @stocks = Stock.all
 
-    render json: @stocks
+    render json: @stocks.as_json(include: :wallet)
   end
 
   # GET /stocks/1
   def show
-    render json: @stock
+    render json: @stock.as_json(include: :wallet)
   end
 
   # POST /stocks
@@ -18,7 +18,7 @@ class StocksController < ApplicationController
     @stock = Stock.new(stock_params)
 
     if @stock.save
-      render json: @stock, status: :created, location: @stock
+      render json: @stock.as_json(include: :wallet), status: :created, location: @stock
     else
       render json: @stock.errors, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class StocksController < ApplicationController
   # PATCH/PUT /stocks/1
   def update
     if @stock.update(stock_params)
-      render json: @stock
+      render json: @stock.as_json(include: :wallet)
     else
       render json: @stock.errors, status: :unprocessable_entity
     end

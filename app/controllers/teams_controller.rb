@@ -5,12 +5,12 @@ class TeamsController < ApplicationController
   def index
     @teams = Team.all
 
-    render json: @teams
+    render json: @teams.as_json(include: :wallet) 
   end
 
   # GET /teams/1
   def show
-    render json: @team
+    render json: @team.as_json(include: :wallet)
   end
 
   # POST /teams
@@ -18,7 +18,7 @@ class TeamsController < ApplicationController
     @team = Team.new(team_params)
 
     if @team.save
-      render json: @team, status: :created, location: @team
+      render json: @team.as_json(include: :wallet), status: :created, location: @team
     else
       render json: @team.errors, status: :unprocessable_entity
     end
@@ -27,7 +27,7 @@ class TeamsController < ApplicationController
   # PATCH/PUT /teams/1
   def update
     if @team.update(team_params)
-      render json: @team
+      render json: @team.as_json(include: :wallet)
     else
       render json: @team.errors, status: :unprocessable_entity
     end

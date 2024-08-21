@@ -62,6 +62,12 @@ RSpec.describe "/stocks", type: :request do
              params: { stock: valid_attributes }, headers: valid_headers, as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+        json_response = JSON.parse(response.body)
+        expect(json_response['id']).to be_present
+        expect(json_response['symbol']).to eq(valid_attributes[:symbol])
+        expect(json_response['company_name']).to eq(valid_attributes[:company_name])
+        expect(json_response['wallet']).to be_present
+        expect(json_response['wallet']['balance']).to eq("0.0")
       end
     end
 

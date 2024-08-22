@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   resources :stocks, except: [ :destroy ]
   resources :teams, except: [ :destroy ]
   resources :users, except: [ :destroy ]
+  post 'sign_in', to: 'authentication#sign_in'
+  delete 'sign_out', to: 'authentication#sign_out'
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

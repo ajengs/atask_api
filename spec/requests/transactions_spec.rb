@@ -10,14 +10,14 @@ RSpec.describe "/transactions", type: :request do
     FactoryBot.attributes_for(:transaction, transaction_type: nil)
   }
 
-  let(:valid_headers) {
-    {}
-  }
+  before do
+    login_user
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       Transaction.create! valid_attributes
-      get transactions_url, headers: valid_headers, as: :json
+      get transactions_url, headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -25,7 +25,7 @@ RSpec.describe "/transactions", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       transaction = Transaction.create! valid_attributes
-      get transaction_url(transaction), as: :json
+      get transaction_url(transaction), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -36,7 +36,7 @@ RSpec.describe "/transactions", type: :request do
         expect {
           post transactions_url,
             params: { transaction: valid_attributes },
-            headers: valid_headers,
+            headers: @valid_headers,
             as: :json
         }.to change(Transaction, :count).by(1)
       end
@@ -44,7 +44,7 @@ RSpec.describe "/transactions", type: :request do
       it "renders a JSON response with the new transaction" do
         post transactions_url,
           params: { transaction: valid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -63,7 +63,7 @@ RSpec.describe "/transactions", type: :request do
       it "renders a JSON response with errors for the new transaction" do
         post transactions_url,
           params: { transaction: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -81,7 +81,7 @@ RSpec.describe "/transactions", type: :request do
         transaction = Transaction.create! valid_attributes
         patch transaction_url(transaction),
           params: { transaction: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         transaction.reload
         expect(transaction.amount).to eq(100)
@@ -91,7 +91,7 @@ RSpec.describe "/transactions", type: :request do
         transaction = Transaction.create! valid_attributes
         patch transaction_url(transaction),
           params: { transaction: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -103,7 +103,7 @@ RSpec.describe "/transactions", type: :request do
         transaction = Transaction.create! valid_attributes
         patch transaction_url(transaction),
           params: { transaction: { transaction_type: 'invalid' } },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))

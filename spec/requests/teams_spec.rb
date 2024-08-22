@@ -9,14 +9,14 @@ RSpec.describe "/teams", type: :request do
     FactoryBot.attributes_for(:team, name: nil)
   }
 
-  let(:valid_headers) {
-    {}
-  }
+  before do
+    login_user
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       Team.create! valid_attributes
-      get teams_url, headers: valid_headers, as: :json
+      get teams_url, headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe "/teams", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       team = Team.create! valid_attributes
-      get team_url(team), as: :json
+      get team_url(team), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -35,7 +35,7 @@ RSpec.describe "/teams", type: :request do
         expect {
           post teams_url,
             params: { team: valid_attributes },
-            headers: valid_headers,
+            headers: @valid_headers,
             as: :json
         }.to change(Team, :count).by(1)
       end
@@ -43,7 +43,7 @@ RSpec.describe "/teams", type: :request do
       it "renders a JSON response with the new team" do
         post teams_url,
           params: { team: valid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -67,7 +67,7 @@ RSpec.describe "/teams", type: :request do
       it "renders a JSON response with errors for the new team" do
         post teams_url,
           params: { team: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(422)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -85,7 +85,7 @@ RSpec.describe "/teams", type: :request do
         team = Team.create! valid_attributes
         patch team_url(team),
           params: { team: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         team.reload
         expect(team.name).to eq("New Name")
@@ -95,7 +95,7 @@ RSpec.describe "/teams", type: :request do
         team = Team.create! valid_attributes
         patch team_url(team),
           params: { team: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -107,7 +107,7 @@ RSpec.describe "/teams", type: :request do
         team = Team.create! valid_attributes
         patch team_url(team),
           params: { team: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(422)
         expect(response.content_type).to match(a_string_including("application/json"))

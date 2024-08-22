@@ -1,6 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe "/users", type: :request do
+  before do
+    login_user
+  end
+
   let(:valid_attributes) {
     FactoryBot.attributes_for(:user)
   }
@@ -9,14 +13,10 @@ RSpec.describe "/users", type: :request do
     FactoryBot.attributes_for(:user, name: nil)
   }
 
-  let(:valid_headers) {
-    {}
-  }
-
   describe "GET /index" do
     it "renders a successful response" do
       User.create! valid_attributes
-      get users_url, headers: valid_headers, as: :json
+      get users_url, headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe "/users", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       user = User.create! valid_attributes
-      get user_url(user), as: :json
+      get user_url(user), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -35,7 +35,7 @@ RSpec.describe "/users", type: :request do
         expect {
           post users_url,
             params: { user: valid_attributes },
-            headers: valid_headers,
+            headers: @valid_headers,
             as: :json
         }.to change(User, :count).by(1)
       end
@@ -43,7 +43,7 @@ RSpec.describe "/users", type: :request do
       it "renders a JSON response with the new user" do
         post users_url,
           params: { user: valid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -68,7 +68,7 @@ RSpec.describe "/users", type: :request do
       it "renders a JSON response with errors for the new user" do
         post users_url,
           params: { user: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -86,7 +86,7 @@ RSpec.describe "/users", type: :request do
         user = User.create! valid_attributes
         patch user_url(user),
           params: { user: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         user.reload
         expect(user.name).to eq("New Name")
@@ -96,7 +96,7 @@ RSpec.describe "/users", type: :request do
         user = User.create! valid_attributes
         patch user_url(user),
           params: { user: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -108,7 +108,7 @@ RSpec.describe "/users", type: :request do
         user = User.create! valid_attributes
         patch user_url(user),
           params: { user: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response.content_type).to match(a_string_including("application/json"))

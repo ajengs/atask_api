@@ -9,14 +9,14 @@ RSpec.describe "/stocks", type: :request do
     FactoryBot.attributes_for(:stock, symbol: nil)
   }
 
-  let(:valid_headers) {
-    {}
-  }
+  before do
+    login_user
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       Stock.create! valid_attributes
-      get stocks_url, headers: valid_headers, as: :json
+      get stocks_url, headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -24,7 +24,7 @@ RSpec.describe "/stocks", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       stock = Stock.create! valid_attributes
-      get stock_url(stock), as: :json
+      get stock_url(stock), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -35,7 +35,7 @@ RSpec.describe "/stocks", type: :request do
         expect {
           post stocks_url,
             params: { stock: valid_attributes },
-            headers: valid_headers,
+            headers: @valid_headers,
             as: :json
         }.to change(Stock, :count).by(1)
       end
@@ -43,7 +43,7 @@ RSpec.describe "/stocks", type: :request do
       it "renders a JSON response with the new stock" do
         post stocks_url,
           params: { stock: valid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -61,6 +61,7 @@ RSpec.describe "/stocks", type: :request do
         expect {
           post stocks_url,
             params: { stock: invalid_attributes },
+            headers: @valid_headers,
             as: :json
         }.to change(Stock, :count).by(0)
       end
@@ -68,7 +69,7 @@ RSpec.describe "/stocks", type: :request do
       it "renders a JSON response with errors for the new stock" do
         post stocks_url,
           params: { stock: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(422)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -86,7 +87,7 @@ RSpec.describe "/stocks", type: :request do
         stock = Stock.create! valid_attributes
         patch stock_url(stock),
           params: { stock: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         stock.reload
         expect(stock.company_name).to eq("New Company Name")
@@ -96,7 +97,7 @@ RSpec.describe "/stocks", type: :request do
         stock = Stock.create! valid_attributes
         patch stock_url(stock),
           params: { stock: new_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
@@ -108,7 +109,7 @@ RSpec.describe "/stocks", type: :request do
         stock = Stock.create! valid_attributes
         patch stock_url(stock),
           params: { stock: invalid_attributes },
-          headers: valid_headers,
+          headers: @valid_headers,
           as: :json
         expect(response).to have_http_status(422)
         expect(response.content_type).to match(a_string_including("application/json"))

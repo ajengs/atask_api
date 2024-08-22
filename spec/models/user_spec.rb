@@ -18,7 +18,7 @@ RSpec.describe User, type: :model do
     end
 
     it "is not valid with a duplicate email" do
-      User.create(name: "John Doe", email: "john@example.com")
+      FactoryBot.create(:user, name: "John Doe", email: "john@example.com")
       user = FactoryBot.build(:user, email: "john@example.com")
       expect(user).to_not be_valid
     end

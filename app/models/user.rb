@@ -1,7 +1,13 @@
+require "digest"
+
 class User < ApplicationRecord
+  has_one :wallet, as: :account
+  has_many :auth_tokens, dependent: :destroy
+  has_secure_password
+
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
-  has_one :wallet, as: :account
+  validates :password, presence: true, length: { minimum: 6 }, if: :password_digest_changed?
 
   after_create :create_default_wallet
 

@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe "/wallets", type: :request do
-  let(:valid_headers) {
-    {}
-  }
+  before do
+    login_user
+  end
 
   describe "GET /index" do
     it "renders a successful response" do
       FactoryBot.create(:user)
-      get wallets_url, headers: valid_headers, as: :json
+      get wallets_url, headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
   end
@@ -16,13 +16,13 @@ RSpec.describe "/wallets", type: :request do
   describe "GET /show" do
     it "renders a successful response" do
       account = FactoryBot.create(:user)
-      get wallet_url(account.wallet), as: :json
+      get wallet_url(account.wallet), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
 
     it "renders a JSON response with wallet details" do
       account = FactoryBot.create(:user)
-      get wallet_url(account.wallet), as: :json
+      get wallet_url(account.wallet), headers: @valid_headers, as: :json
 
       expect(response).to be_successful
       expect(response.content_type).to match(a_string_including("application/json"))
@@ -46,12 +46,12 @@ RSpec.describe "/wallets", type: :request do
     end
 
     it "renders a successful response" do
-      get calculated_balance_wallet_url(wallet), as: :json
+      get calculated_balance_wallet_url(wallet), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
 
     it "returns correct calculated balance information" do
-      get calculated_balance_wallet_url(wallet), as: :json
+      get calculated_balance_wallet_url(wallet), headers: @valid_headers, as: :json
 
       expect(response).to be_successful
       expect(response.content_type).to match(a_string_including("application/json"))
@@ -65,7 +65,7 @@ RSpec.describe "/wallets", type: :request do
 
     it 'returns correct calculated balance information when balance does not match transactions' do
       wallet.update(balance: 70)
-      get calculated_balance_wallet_url(wallet), as: :json
+      get calculated_balance_wallet_url(wallet), headers: @valid_headers, as: :json
 
       expect(response).to be_successful
       expect(response.content_type).to match(a_string_including("application/json"))

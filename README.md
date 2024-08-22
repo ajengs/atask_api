@@ -31,6 +31,10 @@ ATask API is a Ruby on Rails application that manages transactions, wallets, sto
    ```
    http://localhost:3000
    ```
+7. Seed sample admin user:
+   ```
+   rails db:seed
+   ```
 
 ## Assumptions
 

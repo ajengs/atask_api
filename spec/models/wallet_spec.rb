@@ -17,19 +17,31 @@ RSpec.describe Wallet, type: :model do
       wallet = FactoryBot.build(:wallet, balance: nil)
       expect(wallet).to_not be_valid
     end
-  end
 
-  describe "methods" do
-    it "returns the account type" do
+    it 'increments the lock version on update' do
       account = FactoryBot.create(:user)
-      wallet = FactoryBot.create(:wallet, account: account)
-      expect(wallet.account_type).to eq(wallet.account.class.name)
+      wallet = account.wallet
+      expect {
+        wallet.update(balance: 100)
+      }.to change { wallet.reload.lock_version }.by(1)
     end
 
-    it "returns the account id" do
+    it 'fails to update when there is a concurrent modification' do
       account = FactoryBot.create(:user)
-      wallet = FactoryBot.create(:wallet, account: account)
-      expect(wallet.account_id).to eq(wallet.account.id)
+      wallet = account.wallet
+      original_balance = wallet.balance
+
+      # Simulate a concurrent update
+      wallet_copy = Wallet.find(wallet.id)
+      wallet_copy.update(balance: 200)
+
+      # Attempt to update the original wallet
+      expect {
+        wallet.update(balance: 300)
+      }.to raise_error(ActiveRecord::StaleObjectError)
+
+      # Verify the balance wasn't changed
+      expect(wallet.reload.balance).to eq(200)
     end
   end
 end

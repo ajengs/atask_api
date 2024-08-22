@@ -101,13 +101,4 @@ RSpec.describe "/teams", type: :request do
       end
     end
   end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested team" do
-      team = Team.create! valid_attributes
-      expect {
-        delete team_url(team), headers: valid_headers, as: :json
-      }.to change(Team, :count).by(-1)
-    end
-  end
 end

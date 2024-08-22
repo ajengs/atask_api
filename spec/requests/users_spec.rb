@@ -102,13 +102,4 @@ RSpec.describe "/users", type: :request do
       end
     end
   end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested user" do
-      user = User.create! valid_attributes
-      expect {
-        delete user_url(user), headers: valid_headers, as: :json
-      }.to change(User, :count).by(-1)
-    end
-  end
 end

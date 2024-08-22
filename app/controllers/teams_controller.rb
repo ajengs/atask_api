@@ -1,5 +1,5 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: %i[ show update destroy ]
+  before_action :set_team, only: %i[ show update ]
 
   # GET /teams
   def index
@@ -31,11 +31,6 @@ class TeamsController < ApplicationController
     else
       render json: @team.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /teams/1
-  def destroy
-    @team.destroy!
   end
 
   private

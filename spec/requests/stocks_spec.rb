@@ -102,13 +102,4 @@ RSpec.describe "/stocks", type: :request do
       end
     end
   end
-
-  describe "DELETE /destroy" do
-    it "destroys the requested stock" do
-      stock = Stock.create! valid_attributes
-      expect {
-        delete stock_url(stock), headers: valid_headers, as: :json
-      }.to change(Stock, :count).by(-1)
-    end
-  end
 end

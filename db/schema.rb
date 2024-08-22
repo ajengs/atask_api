@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_08_21_140105) do
+ActiveRecord::Schema[7.2].define(version: 2024_08_22_102805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,6 +34,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_21_140105) do
     t.uuid "destination_wallet_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "description"
     t.index ["destination_wallet_id"], name: "index_transactions_on_destination_wallet_id"
     t.index ["source_wallet_id"], name: "index_transactions_on_source_wallet_id"
   end

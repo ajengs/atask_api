@@ -1,5 +1,5 @@
 class StocksController < ApplicationController
-  before_action :set_stock, only: %i[ show update destroy ]
+  before_action :set_stock, only: %i[ show update ]
 
   # GET /stocks
   def index
@@ -31,11 +31,6 @@ class StocksController < ApplicationController
     else
       render json: @stock.errors, status: :unprocessable_entity
     end
-  end
-
-  # DELETE /stocks/1
-  def destroy
-    @stock.destroy!
   end
 
   private

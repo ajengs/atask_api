@@ -22,9 +22,5 @@ RSpec.describe StocksController, type: :routing do
     it "routes to #update via PATCH" do
       expect(patch: "/stocks/1").to route_to("stocks#update", id: "1")
     end
-
-    it "routes to #destroy" do
-      expect(delete: "/stocks/1").to route_to("stocks#destroy", id: "1")
-    end
   end
 end

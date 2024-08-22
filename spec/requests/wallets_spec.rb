@@ -35,5 +35,16 @@ RSpec.describe "/wallets", type: :request do
       get wallet_url(account.wallet), as: :json
       expect(response).to be_successful
     end
+
+    it "renders a JSON response with wallet details" do
+      account = FactoryBot.create(:user)
+      get wallet_url(account.wallet), as: :json
+
+      expect(response).to be_successful
+      expect(response.content_type).to match(a_string_including("application/json"))
+      
+      json_response = JSON.parse(response.body)
+      expect(json_response['id']).to be_present
+    end
   end
 end

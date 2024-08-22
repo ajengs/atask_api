@@ -1,4 +1,6 @@
 class WalletsController < ApplicationController
+  before_action :set_wallet, only: %i[ show ]
+
   # GET /wallets
   def index
     @wallets = Wallet.all
@@ -10,4 +12,9 @@ class WalletsController < ApplicationController
   def show
     render json: @wallet
   end
+
+  private
+    def set_wallet
+      @wallet = Wallet.find(params[:id])
+    end
 end

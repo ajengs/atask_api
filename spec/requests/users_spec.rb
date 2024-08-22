@@ -51,6 +51,7 @@ RSpec.describe "/users", type: :request do
         expect(json_response['id']).to be_present
         expect(json_response['name']).to eq(valid_attributes[:name])
         expect(json_response['email']).to eq(valid_attributes[:email])
+        expect(json_response['password_digest']).to be_nil
         expect(json_response['wallet']).to be_present
         expect(json_response['wallet']['balance']).to eq("0.0")
       end

@@ -50,12 +50,18 @@ RSpec.describe Wallet, type: :model do
     let(:wallet) { account.wallet }
 
     before do
-      FactoryBot.create(:transaction, destination_wallet: wallet, source_wallet: nil, amount: 100)
+      login_user
+      FactoryBot.create(:transaction,
+        destination_wallet: wallet,
+        source_wallet: nil,
+        amount: 100,
+        user: @current_user)
       FactoryBot.create(:transaction,
         transaction_type: 'debit',
         source_wallet: wallet,
         destination_wallet: nil,
-        amount: 50)
+        amount: 50,
+        user: @current_user)
     end
 
 

@@ -1,6 +1,7 @@
 class Transaction < ApplicationRecord
   belongs_to :source_wallet, class_name: "Wallet", optional: true
   belongs_to :destination_wallet, class_name: "Wallet", optional: true
+  belongs_to :user
 
   validates :transaction_type, presence: true
   validates :transaction_type,

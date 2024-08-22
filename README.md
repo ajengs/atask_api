@@ -45,14 +45,6 @@ ATask API is a Ruby on Rails application that manages transactions, wallets, sto
 - Transaction amount should be less than or equal to the wallet balance
 - Transaction will update the wallet balance
 - Transaction should have a reference to the user who created the transaction
-- Transaction can only be be created by user with role admin
-- User with role admin can create, update, and view any model
-- User with role viewer can view all models
-
-## TODO List
-
-- [ ] All models should have status (active, inactive)
-- [ ] Optimize database queries for better performance
 
 ## Resources
 

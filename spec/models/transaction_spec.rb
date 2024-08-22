@@ -107,18 +107,29 @@ RSpec.describe Transaction, type: :model do
   end
 
   context 'callbacks' do
+    before do
+      login_user
+    end
+
     it 'updates the wallet balances for credit transactions' do
-      transaction = FactoryBot.create(:transaction, transaction_type: 'credit', amount: 100)
+      transaction = FactoryBot.create(:transaction,
+        transaction_type: 'credit',
+        amount: 100,
+        user: @current_user)
       expect(transaction.destination_wallet.balance).to eq(transaction.amount)
     end
 
     it 'updates the wallet balances for debit transactions' do
-      credited = FactoryBot.create(:transaction, transaction_type: 'credit', amount: 100)
+      credited = FactoryBot.create(:transaction,
+        transaction_type: 'credit',
+        amount: 100,
+        user: @current_user)
       transaction = FactoryBot.create(:transaction,
         transaction_type: 'debit',
         source_wallet: credited.destination_wallet,
         destination_wallet: nil,
-        amount: 10)
+        amount: 10,
+        user: @current_user)
       expect(transaction.source_wallet.balance).to eq(90.0)
     end
 
@@ -126,13 +137,15 @@ RSpec.describe Transaction, type: :model do
       credited = FactoryBot.create(:transaction,
         transaction_type: 'credit',
         source_wallet: nil,
-        amount: 100)
+        amount: 100,
+        user: @current_user)
       destination = FactoryBot.create(:user)
       transaction = FactoryBot.create(:transaction,
         transaction_type: 'transfer',
         source_wallet: credited.destination_wallet,
         destination_wallet: destination.wallet,
-        amount: 10)
+        amount: 10,
+        user: @current_user)
       expect(transaction.source_wallet.balance).to eq(90.0)
       expect(transaction.destination_wallet.balance).to eq(10.0)
     end
@@ -148,7 +161,8 @@ RSpec.describe Transaction, type: :model do
           transaction_type: 'transfer',
           source_wallet: source_account.wallet,
           destination_wallet: destination_account.wallet,
-          amount: 50)
+          amount: 50,
+          user: @current_user)
       }.to raise_error(ActiveRecord::RecordInvalid)
 
       expect(Transaction.count).to eq(0)

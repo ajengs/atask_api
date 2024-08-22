@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_08_22_114723) do
+ActiveRecord::Schema[7.2].define(version: 2024_08_22_131057) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -45,8 +45,10 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_22_114723) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.uuid "user_id"
     t.index ["destination_wallet_id"], name: "index_transactions_on_destination_wallet_id"
     t.index ["source_wallet_id"], name: "index_transactions_on_source_wallet_id"
+    t.index ["user_id"], name: "index_transactions_on_user_id"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -68,6 +70,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_08_22_114723) do
   end
 
   add_foreign_key "auth_tokens", "users"
+  add_foreign_key "transactions", "users"
   add_foreign_key "transactions", "wallets", column: "destination_wallet_id"
   add_foreign_key "transactions", "wallets", column: "source_wallet_id"
 end

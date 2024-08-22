@@ -2,7 +2,9 @@ require "digest"
 
 class User < ApplicationRecord
   has_one :wallet, as: :account
-  has_many :auth_tokens, dependent: :destroy
+  has_many :auth_tokens
+  has_many :transactions
+
   has_secure_password
 
   validates :name, presence: true

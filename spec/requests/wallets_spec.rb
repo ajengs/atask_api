@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe "/wallets", type: :request do
   before do
     login_user
+    current_user
   end
 
   describe "GET /index" do
@@ -37,12 +38,17 @@ RSpec.describe "/wallets", type: :request do
     let(:wallet) { user.wallet }
 
     before do
-      FactoryBot.create(:transaction, destination_wallet: wallet, source_wallet: nil, amount: 100)
+      FactoryBot.create(:transaction,
+        destination_wallet: wallet,
+        source_wallet: nil,
+        amount: 100,
+        user: @current_user)
       FactoryBot.create(:transaction,
         transaction_type: 'debit',
         source_wallet: wallet,
         destination_wallet: nil,
-        amount: 50)
+        amount: 50,
+        user: @current_user)
     end
 
     it "renders a successful response" do

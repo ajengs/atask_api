@@ -15,7 +15,7 @@ class TransactionsController < ApplicationController
 
   # POST /transactions
   def create
-    @transaction = Transaction.new(transaction_params)
+    @transaction = current_user.transactions.build(transaction_params)
 
     if @transaction.save
       render json: @transaction, status: :created, location: @transaction

@@ -12,11 +12,12 @@ RSpec.describe "/transactions", type: :request do
 
   before do
     login_user
+    current_user
   end
 
   describe "GET /index" do
     it "renders a successful response" do
-      Transaction.create! valid_attributes
+      FactoryBot.create(:transaction, user: @current_user)
       get transactions_url, headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
@@ -24,7 +25,7 @@ RSpec.describe "/transactions", type: :request do
 
   describe "GET /show" do
     it "renders a successful response" do
-      transaction = Transaction.create! valid_attributes
+      transaction = FactoryBot.create(:transaction, user: @current_user)
       get transaction_url(transaction), headers: @valid_headers, as: :json
       expect(response).to be_successful
     end
@@ -48,6 +49,7 @@ RSpec.describe "/transactions", type: :request do
           as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
+        expect(Transaction.last.user_id).to eq(@current_user.id)
       end
     end
 
@@ -78,7 +80,7 @@ RSpec.describe "/transactions", type: :request do
       }
 
       it "updates the requested transaction" do
-        transaction = Transaction.create! valid_attributes
+        transaction = FactoryBot.create(:transaction, user: @current_user)
         patch transaction_url(transaction),
           params: { transaction: new_attributes },
           headers: @valid_headers,
@@ -88,7 +90,7 @@ RSpec.describe "/transactions", type: :request do
       end
 
       it "renders a JSON response with the transaction" do
-        transaction = Transaction.create! valid_attributes
+        transaction = FactoryBot.create(:transaction, user: @current_user)
         patch transaction_url(transaction),
           params: { transaction: new_attributes },
           headers: @valid_headers,
@@ -100,7 +102,7 @@ RSpec.describe "/transactions", type: :request do
 
     context "with invalid parameters" do
       it "renders a JSON response with errors for the transaction" do
-        transaction = Transaction.create! valid_attributes
+        transaction = FactoryBot.create(:transaction, user: @current_user)
         patch transaction_url(transaction),
           params: { transaction: { transaction_type: 'invalid' } },
           headers: @valid_headers,

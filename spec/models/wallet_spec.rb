@@ -19,13 +19,6 @@ RSpec.describe Wallet, type: :model do
     end
   end
 
-  # describe "callbacks" do
-  #   it "creates a wallet when an account is created" do
-  #     account = FactoryBot.create(:user)
-  #     expect(account.wallet).to be_present
-  #   end
-  # end
-
   describe "methods" do
     it "returns the account type" do
       account = FactoryBot.create(:user)

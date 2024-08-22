@@ -41,47 +41,67 @@ RSpec.describe Transaction, type: :model do
       end
 
       it 'is not valid transfer without a source_wallet' do
-        transaction = FactoryBot.build(:transaction, transaction_type: 'transfer', source_wallet: nil)
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'transfer',
+          source_wallet: nil)
         expect(transaction).to_not be_valid
       end
 
       it 'is not valid transfer without a destination_wallet' do
-        transaction = FactoryBot.build(:transaction, transaction_type: 'transfer', destination_wallet: nil)
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'transfer',
+          destination_wallet: nil)
         expect(transaction).to_not be_valid
       end
     end
 
     context 'validate balance is enough' do
-      let(:source_wallet) { 
+      let(:source_wallet) {
         user = FactoryBot.create(:user)
         user.wallet.update(balance: 100)
         user.wallet.reload
       }
-      let(:destination_wallet) { 
+      let(:destination_wallet) {
         user = FactoryBot.create(:user, email: 'destination@example.com')
         user.wallet
       }
 
       it 'is valid debit when amount is less than or equal to source wallet balance' do
-        transaction = FactoryBot.build(:transaction, transaction_type: 'debit', source_wallet: source_wallet, amount: 100)
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'debit',
+          source_wallet: source_wallet,
+          amount: 100)
         expect(transaction).to be_valid
       end
 
       it 'is invalid debit when amount exceeds source wallet balance' do
-        transaction = FactoryBot.build(:transaction, transaction_type: 'debit', source_wallet: source_wallet, amount: 101)
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'debit',
+          source_wallet: source_wallet,
+          amount: 101)
         expect(transaction).to be_invalid
-        expect(transaction.errors[:amount]).to include('exceeds available balance in the source wallet')
+        expect(transaction.errors[:amount]).to include(
+          'exceeds available balance in the source wallet')
       end
 
       it 'is valid transfer when amount is less than or equal to source wallet balance' do
-        transaction = FactoryBot.build(:transaction, transaction_type: 'transfer', source_wallet: source_wallet, destination_wallet: destination_wallet, amount: 100)
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'transfer',
+          source_wallet: source_wallet,
+          destination_wallet: destination_wallet,
+          amount: 100)
         expect(transaction).to be_valid
-      end 
+      end
 
       it 'is invalid transfer when amount exceeds source wallet balance' do
-        transaction = FactoryBot.build(:transaction, transaction_type: 'transfer', source_wallet: source_wallet, destination_wallet: destination_wallet, amount: 101)
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'transfer',
+          source_wallet: source_wallet,
+          destination_wallet: destination_wallet,
+          amount: 101)
         expect(transaction).to be_invalid
-        expect(transaction.errors[:amount]).to include('exceeds available balance in the source wallet')
+        expect(transaction.errors[:amount]).to include(
+          'exceeds available balance in the source wallet')
       end
     end
   end
@@ -94,14 +114,25 @@ RSpec.describe Transaction, type: :model do
 
     it 'updates the wallet balances for debit transactions' do
       credited = FactoryBot.create(:transaction, transaction_type: 'credit', amount: 100)
-      transaction = FactoryBot.create(:transaction, transaction_type: 'debit', source_wallet: credited.destination_wallet, destination_wallet: nil, amount: 10)
+      transaction = FactoryBot.create(:transaction,
+        transaction_type: 'debit',
+        source_wallet: credited.destination_wallet,
+        destination_wallet: nil,
+        amount: 10)
       expect(transaction.source_wallet.balance).to eq(90.0)
     end
 
     it 'updates the wallet balances for transfer transactions' do
-      credited = FactoryBot.create(:transaction, transaction_type: 'credit', source_wallet: nil, amount: 100)
+      credited = FactoryBot.create(:transaction,
+        transaction_type: 'credit',
+        source_wallet: nil,
+        amount: 100)
       destination = FactoryBot.create(:user)
-      transaction = FactoryBot.create(:transaction, transaction_type: 'transfer', source_wallet: credited.destination_wallet, destination_wallet: destination.wallet, amount: 10)
+      transaction = FactoryBot.create(:transaction,
+        transaction_type: 'transfer',
+        source_wallet: credited.destination_wallet,
+        destination_wallet: destination.wallet,
+        amount: 10)
       expect(transaction.source_wallet.balance).to eq(90.0)
       expect(transaction.destination_wallet.balance).to eq(10.0)
     end
@@ -109,19 +140,19 @@ RSpec.describe Transaction, type: :model do
     it 'does not create a transaction if wallet update fails' do
       source_account = FactoryBot.create(:user)
       destination_account = FactoryBot.create(:user, email: 'destination@example.com')
-      
+
       allow_any_instance_of(Wallet).to receive(:increment!).and_raise(ActiveRecord::RecordInvalid)
 
       expect {
-        FactoryBot.create(:transaction, 
-          transaction_type: 'transfer', 
-          source_wallet: source_account.wallet, 
-          destination_wallet: destination_account.wallet, 
+        FactoryBot.create(:transaction,
+          transaction_type: 'transfer',
+          source_wallet: source_account.wallet,
+          destination_wallet: destination_account.wallet,
           amount: 50)
       }.to raise_error(ActiveRecord::RecordInvalid)
 
       expect(Transaction.count).to eq(0)
-      
+
       expect(source_account.wallet.reload.balance).to eq(0)
       expect(destination_account.wallet.reload.balance).to eq(0)
     end

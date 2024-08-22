@@ -11,7 +11,8 @@ RSpec.describe WalletsController, type: :routing do
     end
 
     it "routes to #calculated_balance" do
-      expect(get: "/wallets/1/calculated_balance").to route_to("wallets#calculated_balance", id: "1")
+      expect(get: "/wallets/1/calculated_balance").to route_to("wallets#calculated_balance",
+        id: "1")
     end
   end
 end

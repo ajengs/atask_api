@@ -9,5 +9,5 @@ RSpec.describe Team, type: :model do
   it "is not valid without a name" do
     team = Team.new(name: nil)
     expect(team).to_not be_valid
-  end 
+  end
 end

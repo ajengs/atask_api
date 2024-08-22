@@ -5,7 +5,7 @@ class TeamsController < ApplicationController
   def index
     @teams = Team.all
 
-    render json: @teams.as_json(include: :wallet) 
+    render json: @teams.as_json(include: :wallet)
   end
 
   # GET /teams/1

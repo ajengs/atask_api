@@ -10,12 +10,12 @@ RSpec.describe Stock, type: :model do
     it "is not valid without a symbol" do
       stock = FactoryBot.build(:stock, symbol: nil)
       expect(stock).to_not be_valid
-    end 
+    end
 
     it "is not valid without a company name" do
       stock = FactoryBot.build(:stock, company_name: nil)
       expect(stock).to_not be_valid
-    end 
+    end
 
     it "is not valid with a duplicate symbol" do
       FactoryBot.create(:stock, symbol: "AAPL", company_name: "Apple Inc.")

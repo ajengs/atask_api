@@ -16,7 +16,7 @@ class TransactionsController < ApplicationController
   # POST /transactions
   def create
     @transaction = Transaction.new(transaction_params)
-    
+
     if @transaction.save
       render json: @transaction, status: :created, location: @transaction
     else
@@ -41,6 +41,9 @@ class TransactionsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def transaction_params
-      params.require(:transaction).permit(:amount, :transaction_type, :source_wallet_id, :destination_wallet_id)
+      params.require(:transaction).permit(:amount,
+        :transaction_type,
+        :source_wallet_id,
+        :destination_wallet_id)
     end
 end

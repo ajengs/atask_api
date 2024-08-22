@@ -34,13 +34,17 @@ RSpec.describe "/teams", type: :request do
       it "creates a new Team" do
         expect {
           post teams_url,
-               params: { team: valid_attributes }, headers: valid_headers, as: :json
+            params: { team: valid_attributes },
+            headers: valid_headers,
+            as: :json
         }.to change(Team, :count).by(1)
       end
 
       it "renders a JSON response with the new team" do
         post teams_url,
-             params: { team: valid_attributes }, headers: valid_headers, as: :json
+          params: { team: valid_attributes },
+          headers: valid_headers,
+          as: :json
         expect(response).to have_http_status(:created)
         expect(response.content_type).to match(a_string_including("application/json"))
         json_response = JSON.parse(response.body)
@@ -55,13 +59,16 @@ RSpec.describe "/teams", type: :request do
       it "does not create a new Team" do
         expect {
           post teams_url,
-               params: { team: invalid_attributes }, as: :json
+            params: { team: invalid_attributes },
+            as: :json
         }.to change(Team, :count).by(0)
       end
 
       it "renders a JSON response with errors for the new team" do
         post teams_url,
-             params: { team: invalid_attributes }, headers: valid_headers, as: :json
+          params: { team: invalid_attributes },
+          headers: valid_headers,
+          as: :json
         expect(response).to have_http_status(422)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
@@ -77,7 +84,9 @@ RSpec.describe "/teams", type: :request do
       it "updates the requested team" do
         team = Team.create! valid_attributes
         patch team_url(team),
-              params: { team: new_attributes }, headers: valid_headers, as: :json
+          params: { team: new_attributes },
+          headers: valid_headers,
+          as: :json
         team.reload
         expect(team.name).to eq("New Name")
       end
@@ -85,7 +94,9 @@ RSpec.describe "/teams", type: :request do
       it "renders a JSON response with the team" do
         team = Team.create! valid_attributes
         patch team_url(team),
-              params: { team: new_attributes }, headers: valid_headers, as: :json
+          params: { team: new_attributes },
+          headers: valid_headers,
+          as: :json
         expect(response).to have_http_status(:ok)
         expect(response.content_type).to match(a_string_including("application/json"))
       end
@@ -95,7 +106,9 @@ RSpec.describe "/teams", type: :request do
       it "renders a JSON response with errors for the team" do
         team = Team.create! valid_attributes
         patch team_url(team),
-              params: { team: invalid_attributes }, headers: valid_headers, as: :json
+          params: { team: invalid_attributes },
+          headers: valid_headers,
+          as: :json
         expect(response).to have_http_status(422)
         expect(response.content_type).to match(a_string_including("application/json"))
       end

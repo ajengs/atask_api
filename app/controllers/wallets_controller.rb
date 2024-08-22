@@ -14,7 +14,7 @@ class WalletsController < ApplicationController
   end
 
   def calculated_balance
-    render json: { 
+    render json: {
       balance: @wallet.balance,
       calculated_balance: @wallet.calculated_balance,
       balance_matches_transactions: @wallet.balance_matches_transactions,

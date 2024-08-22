@@ -34,7 +34,7 @@ RSpec.describe User, type: :model do
       user = FactoryBot.create(:user)
       expect(user.email).to eq("john@example.com")
     end
-  end 
+  end
 
   describe "after_create" do
     it "creates a default wallet with zero balance" do

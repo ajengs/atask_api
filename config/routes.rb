@@ -8,8 +8,8 @@ Rails.application.routes.draw do
   resources :stocks, except: [ :destroy ]
   resources :teams, except: [ :destroy ]
   resources :users, except: [ :destroy ]
-  post 'sign_in', to: 'authentication#sign_in'
-  delete 'sign_out', to: 'authentication#sign_out'
+  post 'sign_in', to: 'session#sign_in'
+  delete 'sign_out', to: 'session#sign_out'
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

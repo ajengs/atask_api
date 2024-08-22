@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :transactions, except: [:destroy]
-  resources :wallets, only: [:index, :show]
+  resources :wallets, only: [:index, :show] do
+    member do
+      get :calculated_balance
+    end
+  end
   resources :stocks, except: [:destroy]
   resources :teams, except: [:destroy]
   resources :users, except: [:destroy]

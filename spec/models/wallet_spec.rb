@@ -44,4 +44,41 @@ RSpec.describe Wallet, type: :model do
       expect(wallet.reload.balance).to eq(200)
     end
   end
+
+  describe "calculated_balance" do
+    let(:account) { FactoryBot.create(:user) }
+    let(:wallet) { account.wallet }
+
+    before do
+      FactoryBot.create(:transaction, destination_wallet: wallet, source_wallet: nil, amount: 100)
+      FactoryBot.create(:transaction, transaction_type: 'debit', source_wallet: wallet, destination_wallet: nil, amount: 50)
+    end
+
+
+    it "returns the sum of incoming transactions minus the sum of outgoing transactions" do
+      expect(wallet.calculated_balance).to eq(50)
+    end
+
+    it 'returns zero for a wallet with no transactions' do
+      wallet.outgoing_transactions.destroy_all
+      wallet.incoming_transactions.destroy_all
+      expect(wallet.calculated_balance).to eq(0)
+    end
+
+    it 'checks if balance matches transactions' do
+      expect(wallet.balance_matches_transactions).to be_truthy
+    end
+
+    it 'checks if balance does not matches transactions' do
+      wallet.update(balance: 100)
+      wallet.reload
+      expect(wallet.balance_matches_transactions).to be_falsy
+    end
+
+    it 'checks if balance discrepancy is correct' do
+      wallet.update(balance: 100)
+      wallet.reload
+      expect(wallet.balance_discrepancy).to eq(50)
+    end
+  end
 end

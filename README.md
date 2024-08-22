@@ -52,7 +52,6 @@ ATask API is a Ruby on Rails application that manages transactions, wallets, sto
 ## TODO List
 
 - [ ] Add linters
-- [ ] Add transaction API for auditing wallet balance changes
 - [ ] Add authentication and authorization
 - [ ] All models should have status (active, inactive)
 - [ ] Optimize database queries for better performance

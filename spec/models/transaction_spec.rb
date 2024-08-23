@@ -55,6 +55,16 @@ RSpec.describe Transaction, type: :model do
       end
     end
 
+    context 'validate wallet nullity' do
+      it 'is not valid credit with a source_wallet' do
+        transaction = FactoryBot.build(:transaction,
+          transaction_type: 'credit',
+          source_wallet: FactoryBot.create(:wallet,
+            account: FactoryBot.create(:user, email: 'source@example.com')))
+        expect(transaction).to_not be_valid
+      end
+    end
+
     context 'validate balance is enough' do
       let(:source_wallet) {
         user = FactoryBot.create(:user)
@@ -70,6 +80,7 @@ RSpec.describe Transaction, type: :model do
         transaction = FactoryBot.build(:transaction,
           transaction_type: 'debit',
           source_wallet: source_wallet,
+          destination_wallet: nil,
           amount: 100)
         expect(transaction).to be_valid
       end

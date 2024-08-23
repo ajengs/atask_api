@@ -20,8 +20,11 @@ class Transaction < ApplicationRecord
     when "credit"
       errors.add(:destination_wallet,
         "must be present for credit transactions") if destination_wallet.nil?
+      errors.add(:source_wallet, "must be null for credit transactions") if source_wallet.present?
     when "debit"
       errors.add(:source_wallet, "must be present for debit transactions") if source_wallet.nil?
+      errors.add(:destination_wallet,
+        "must be null for debit transactions") if destination_wallet.present?
     when "transfer"
       errors.add(:source_wallet, "must be present for transfer transactions") if source_wallet.nil?
       errors.add(:destination_wallet,

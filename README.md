@@ -19,21 +19,21 @@ ATask API is a Ruby on Rails application that manages transactions, wallets, sto
    ```
    rails db:create db:migrate
    ```
-4. Run the test suite:
+4. Seed sample admin user:
+   ```
+   rails db:seed
+   ```
+5. Run the test suite:
    ```
    rspec
    ```
-5. Start the server:
+6. Start the server:
    ```
    rails server
    ```
-6. Access the API at:
+7. Access the API at:
    ```
    http://localhost:3000
-   ```
-7. Seed sample admin user:
-   ```
-   rails db:seed
    ```
 
 ## Latest Stock Price Library

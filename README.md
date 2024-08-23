@@ -36,6 +36,20 @@ ATask API is a Ruby on Rails application that manages transactions, wallets, sto
    rails db:seed
    ```
 
+## Latest Stock Price Library
+To use the latest stock price library, you need to set the following environment variables:
+   ```
+   LATEST_STOCK_PRICE_API_KEY
+   LATEST_STOCK_PRICE_HOST
+   ```
+Example usage:
+   ```
+   client = LatestStockPrice::Client.new()
+   price = client.price('NIFTY 50')
+   prices = client.prices(['NIFTY 50', 'BAJFINANCEEQN'])
+   price_all = client.price_all
+   ```
+
 ## Assumptions
 
 - All transactions are done in USD
